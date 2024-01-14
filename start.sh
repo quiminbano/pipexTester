@@ -32,7 +32,7 @@ echo -e "${pink}
               \__|                                                                                
 
 ${nocolor}";
-projectPath=$(realpath ..);
+projectPath="$(pwd)/..";
 if [ ! -f "${projectPath}/Makefile" ]; then
 	echo -e "${red}Makefile not present in the project's folder${nocolor}";
 	exit 1;
@@ -42,7 +42,7 @@ if ! grep -q "pipex" "${projectPath}/Makefile"; then
 	exit 1;
 fi
 mkdir temp_files;
-cp -r ../* temp_files/;
+rsync -av --progress --exclude="$(basename $(pwd))" ../* temp_files/;
 caseForDockerfile=""
 case "$(echo "${options}" | tr '[:upper:]' '[:lower:]')" in
 	"mandatory" )
