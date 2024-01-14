@@ -11,15 +11,20 @@ brightyellow='\033[1;33m'
 pink='\033[38;5;161m'
 nocolor='\033[0m'
 
-if [ $ac -gt 1 ]; then
-	echo -e "${red}Invalid ammount of arguments${nocolor}";
-	echo -e "${red}Usage: bash start.sh options(mandatory, bonus, all)${nocolor}";
+if [ $ac -gt 2 ]; then
+	echo -e "${red}Invalid ammount of arguments.${nocolor}";
+	echo -e "${red}Usage:\nbash start.sh type_of_test(optional) shell_of_reference(optional).${nocolor}";
 	exit 1;
 fi
 if [ $ac == 0 ]; then
 	options="all";
+	typeShell="bash";
+elif [ $ac == 1 ]; then
+	options="$1";
+	typeShell="bash";
 else
 	options="$1";
+	typeShell="$2";
 fi
 echo -e "${pink}
 
@@ -47,6 +52,10 @@ if ! grep -q "pipex" "${projectPath}/Makefile"; then
 fi
 mkdir temp_files;
 rsync -a --no-progress --exclude="$(basename $(pwd))" ../* temp_files/;
+if [ $? -ne 0 ]; then
+	echo -e "${red}Error copying the project's files into the tester folder. Please install the tool rsync and try again. ${nocolor}";
+	exit 1;
+fi
 caseForDockerfile=""
 case "$(echo "${options}" | tr '[:upper:]' '[:lower:]')" in
 	"mandatory" )
@@ -59,8 +68,21 @@ case "$(echo "${options}" | tr '[:upper:]' '[:lower:]')" in
 	caseForDockerfile=$(echo -e ENV TEST="all");
 	;;
 	* )
-	echo -e "${red}Invalid argument${nocolor}";
-	echo -e "${red}Usage: bash start.sh options(mandatory, bonus, all)${nocolor}";
+	echo -e "${red}Invalid argument for type_of_test${nocolor}";
+	echo -e "${red}possible type_of_test: mandatory, bonus, all.${nocolor}";
+	rm -rf temp_files/
+	exit 1;
+esac
+case "$(echo "${typeShell}" | tr '[:upper:]' '[:lower:]')" in
+	"bash" )
+	caseForDockerfile=$(echo -e ${caseForDockerfile} TYPE_SHELL="bash");
+	;;
+	"zsh" )
+	caseForDockerfile=$(echo -e ${caseForDockerfile} TYPE_SHELL="zsh");
+	;;
+	* )
+	echo -e "${red}Invalid argument for shell_of_reference${nocolor}";
+	echo -e "${red}Possibles shell_of_reference: bash, zsh.${nocolor}";
 	rm -rf temp_files/
 	exit 1;
 esac
@@ -68,9 +90,10 @@ esac
 FROM bash:5.2.21-alpine3.19
 
 RUN apk update && \
+	apk upgrade && \
 	echo "y" | apk add --no-cache alpine-sdk && \
 	echo "y" | apk add --no-cache zsh && \
-	echo "y" | apk add --no-cache valgrind
+	echo "y" | apk add --no-cache valgrind valgrind-dev
 
 COPY ./temp_files /pipex
 
@@ -79,10 +102,14 @@ WORKDIR /pipex
 COPY ./test .
 
 RUN chmod +x interface.sh && \
-	chmod +x mandatory.sh && \
-	chmod +x bonus.sh && \
-	chmod +x unsetting.sh && \
-	chmod +x unsetting_bonus.sh
+	chmod +x mandatory_bash.sh && \
+	chmod +x mandatory_zsh.sh && \
+	chmod +x bonus_bash.sh && \
+	chmod +x bonus_zsh.sh && \
+	chmod +x unsetting_bash.sh && \
+	chmod +x unsetting_zsh.sh && \
+	chmod +x unsetting_bonus_bash.sh && \
+	chmod +x unsetting_bonus_zsh.sh
 
 ${caseForDockerfile}
 

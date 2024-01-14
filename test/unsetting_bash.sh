@@ -31,7 +31,7 @@ unset PATH;
 	echo "Testing leaks with valgrind: This will be stored in the in test20.txt";
 	echo "";
 	echo "";
-	/usr/bin/valgrind --leak-check=full --show-reachable=yes --track-origins=yes --verbose --tool=memcheck --trace-children=yes --track-fds=yes ./pipex infile2 ls "wc -l" outfile;
+	/usr/bin/valgrind --leak-check=full --show-leak-kinds=all --undef-value-errors=no --error-exitcode=200 --trace-children=yes --track-fds=yes ./pipex infile2 ls "wc -l" outfile;
 } &> testValgrind/test20.txt
 {
 	echo "TEST NUMBER 21 : ./pipex infile2 /bin/ls \"/usr/bin/wc -l\" outfile and < infile2 /bin/ls | /usr/bin/wc -l > outfile when PATH is not setted";
@@ -63,5 +63,5 @@ unset PATH;
 	echo "Testing leaks with valgrind: This will be stored in the in test21.txt";
 	echo "";
 	echo "";
-	/usr/bin/valgrind --leak-check=full --show-reachable=yes --track-origins=yes --verbose --tool=memcheck --trace-children=yes --track-fds=yes ./pipex infile2 /bin/ls "/usr/bin/wc -l" outfile;
+	/usr/bin/valgrind --leak-check=full --show-leak-kinds=all --undef-value-errors=no --error-exitcode=200 --trace-children=yes --track-fds=yes ./pipex infile2 /bin/ls "/usr/bin/wc -l" outfile;
 } &> testValgrind/test21.txt

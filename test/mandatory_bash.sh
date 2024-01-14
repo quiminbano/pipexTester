@@ -80,6 +80,10 @@ sleep 2
 echo -e "${yellow}Creating files for testing.${nocolor}"
 if [ ! -d "testValgrind" ]; then
 	mkdir testValgrind;
+else
+	cd testValgrind;
+	rm *;
+	cd ..;
 fi
 echo "THIS IS AN INFILE" > infile
 echo -e "hello;world\nhola;mundo" > infile2
@@ -133,7 +137,7 @@ while [ $index -lt $sizeArray ]; do
 		echo "Testing leaks with valgrind";
 		echo "";
 		echo "";
-		eval "valgrind --leak-check=full --show-reachable=yes --track-origins=yes --verbose --tool=memcheck --trace-children=yes --track-fds=yes ${pipexInstructions[$index]}";
+		eval "valgrind --leak-check=full --show-leak-kinds=all --undef-value-errors=no --error-exitcode=200 --trace-children=yes --track-fds=yes ${pipexInstructions[$index]}";
 	} &>> test"$(expr $index + 1)".txt;
 	mv test"$(expr $index + 1)".txt testValgrind/
 	echo -e "${yellow}Done. If you want to check memory leaks and memory issues, check the file test$(expr $index + 1).txt inside the folder testValgrind to see the results.${nocolor}"
@@ -153,7 +157,7 @@ done
 	echo "Testing leaks with valgrind: This will be stored in the in test17.txt";
 	echo ""
 	echo ""
-	LD_PRELOAD=/pipex/libmockfork.so valgrind --leak-check=full --show-reachable=yes --track-origins=yes --verbose --tool=memcheck --trace-children=yes --track-fds=yes ./pipex infile2 ls "wc -l" outfile;
+	LD_PRELOAD=/pipex/libmockfork.so valgrind --leak-check=full --show-leak-kinds=all --undef-value-errors=no --error-exitcode=200 --trace-children=yes --track-fds=yes ./pipex infile2 ls "wc -l" outfile;
 	cat outfile
 } &> test17.txt;
 mv test17.txt testValgrind/
@@ -165,7 +169,7 @@ mv test17.txt testValgrind/
 	LD_PRELOAD=/pipex/libmockpipe.so ./pipex infile2 ls "wc -l" outfile
 	echo ""
 	echo "Testing leaks with valgrind: This will be stored in the in test18.txt";
-	LD_PRELOAD=/pipex/libmockpipe.so valgrind --leak-check=full --show-reachable=yes --track-origins=yes --verbose --tool=memcheck --trace-children=yes --track-fds=yes ./pipex infile2 ls "wc -l" outfile;
+	LD_PRELOAD=/pipex/libmockpipe.so valgrind --leak-check=full --show-leak-kinds=all --undef-value-errors=no --error-exitcode=200 --trace-children=yes --track-fds=yes ./pipex infile2 ls "wc -l" outfile;
 	cat outfile;
 } &> test18.txt;
 mv test18.txt testValgrind/;
@@ -177,11 +181,11 @@ mv test18.txt testValgrind/;
 	LD_PRELOAD=/pipex/libmockmalloc.so ./pipex infile2 ls "wc -l" outfile
 	echo ""
 	echo "Testing leaks with valgrind: This will be stored in the in test19.txt";
-	LD_PRELOAD=/pipex/libmockmalloc.so valgrind --leak-check=full --show-reachable=yes --track-origins=yes --verbose --tool=memcheck --trace-children=yes --track-fds=yes ./pipex infile2 ls "wc -l" outfile;
+	LD_PRELOAD=/pipex/libmockmalloc.so valgrind --leak-check=full --show-leak-kinds=all --undef-value-errors=no --error-exitcode=200 --trace-children=yes --track-fds=yes ./pipex infile2 ls "wc -l" outfile;
 	cat outfile;
 } &> test19.txt;
 mv test19.txt testValgrind/;
-bash unsetting.sh;
+bash unsetting_bash.sh;
 echo -e "${green}Test for mandatory part done!!${nocolor}"
 make fclean > /dev/null
 exit 0;

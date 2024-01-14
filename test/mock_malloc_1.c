@@ -6,7 +6,7 @@
 /*   By: corellan <corellan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 17:31:05 by corellan          #+#    #+#             */
-/*   Updated: 2024/01/13 18:17:04 by corellan         ###   ########.fr       */
+/*   Updated: 2024/01/15 01:01:18 by corellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 #include <unistd.h>
 #include <dlfcn.h>
 #include <string.h>
+#ifdef RUNNING_ON_VALGRIND
+# include <valgrind/memcheck.h>
+#endif
 
 void	*malloc(size_t size)
 {
@@ -39,11 +42,13 @@ void	*malloc(size_t size)
 		dlclose(handler);
 		return (NULL);
 	}
+	#ifndef RUNNING_ON_VALGRIND
 	if (count >= 1)
 	{
 		dlclose(handler);
 		return (NULL);
 	}
+	#endif
 	content = (*orig_malloc)(size);
 	count++;
 	dlclose(handler);

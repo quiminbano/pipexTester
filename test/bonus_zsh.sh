@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#!/bin/zsh
 
 red='\033[0;31m'
 brightred='\033[1;31m'
@@ -173,7 +173,7 @@ mv test17_bonus.txt testValgrind_bonus/
 	cat outfile;
 } &> test18_bonus.txt;
 mv test18_bonus.txt testValgrind_bonus/;
-bash unsetting.sh;
+zsh unsetting_bonus_zsh.sh;
 echo -e "${green}Test for bonus part done!!${nocolor}"
 make fclean > /dev/null
 exit 0;
