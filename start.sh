@@ -11,12 +11,16 @@ brightyellow='\033[1;33m'
 pink='\033[38;5;161m'
 nocolor='\033[0m'
 
-if [ $ac -ne 1 ]; then
+if [ $ac -gt 1 ]; then
 	echo -e "${red}Invalid ammount of arguments${nocolor}";
 	echo -e "${red}Usage: bash start.sh options(mandatory, bonus, all)${nocolor}";
 	exit 1;
 fi
-options=$1
+if [ $ac == 0 ]; then
+	options="all";
+else
+	options="$1";
+fi
 echo -e "${pink}
 
 \$\$\$\$\$\$\$\  \$\$\                            \$\$\$\$\$\$\$\$\                    \$\$\                         
@@ -42,7 +46,7 @@ if ! grep -q "pipex" "${projectPath}/Makefile"; then
 	exit 1;
 fi
 mkdir temp_files;
-rsync -av --progress --exclude="$(basename $(pwd))" ../* temp_files/;
+rsync -a --no-progress --exclude="$(basename $(pwd))" ../* temp_files/;
 caseForDockerfile=""
 case "$(echo "${options}" | tr '[:upper:]' '[:lower:]')" in
 	"mandatory" )

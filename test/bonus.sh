@@ -45,7 +45,10 @@ bashInstructions=("< '' '' | '' > ''" \
 
 echo -e "${yellow}Testing Makefile rules:${nocolor}";
 echo "";
-make > /dev/null 2>&1
+if [ ! -d "myfolder" ]; then
+	mkdir myfolder;
+fi
+make > /dev/null
 if [ $? -ne 0 ]; then
 	echo -e "${red}Error compiling the Makefile with the rule make all${nocolor}";
 	exit 1;
@@ -54,17 +57,17 @@ if [ ! -f "pipex" ]; then
 	echo -e "${red}pipex executable not found.${nocolor}"
 	exit 1;
 fi
-make clean > /dev/null 2>&1
+make clean > /dev/null
 if [ $? -ne 0 ]; then
 	echo -e "${red}Error executing the rule make clean${nocolor}";
 	exit 1;
 fi
-make fclean > /dev/null 2>&1
+make fclean > /dev/null
 if [ $? -ne 0 ]; then
 	echo -e "${red}Error executing the rule make fclean${nocolor}";
 	exit 1;
 fi
-make re > /dev/null 2>&1
+make re > /dev/null
 if [ $? -ne 0 ]; then
 	echo -e "${red}Error executing the rule make re${nocolor}";
 	exit 1;
@@ -73,8 +76,8 @@ if [ ! -f "pipex" ]; then
 	echo -e "${red}pipex executable not found.${nocolor}"
 	exit 1;
 fi
-make fclean > /dev/null 2>&1
-make bonus > /dev/null 2>&1
+make fclean > /dev/null
+make bonus > /dev/null
 if [ $? -ne 0 ]; then
 	echo -e "${red}Error executing the rule make bonus${nocolor}";
 	exit 1;
@@ -172,5 +175,5 @@ mv test17_bonus.txt testValgrind_bonus/
 mv test18_bonus.txt testValgrind_bonus/;
 bash unsetting.sh;
 echo -e "${green}Test for bonus part done!!${nocolor}"
-make fclean > /dev/null 2>&1
+make fclean > /dev/null
 exit 0;
