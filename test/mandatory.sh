@@ -88,24 +88,24 @@ cc -Wall -Wextra -Werror testsegv.c -o testsegv;
 
 returnPipex=0
 returnBash=0
-index=1
+index=0
 sizeArray=${#pipexInstructions[@]}
 echo "";
 echo -e "${yellow}PERMORMING TESTS. CHECK THE FOLDER testValgrind TO SEE THE RESULTS${nocolor}";
 echo ""
-while [ $index -le $sizeArray ]; do
-	echo -e "${yellow}Performing test number ${index}. Differences between the return value shouldn't be a reason to fail the project${nocolor}"
+while [ $index -lt $sizeArray ]; do
+	echo -e "${yellow}Performing test number $(expr $index + 1).${nocolor}";
+	echo "";
 	{
+		echo "TEST NUMBER $(expr $index + 1): ${pipexInstructions[$index]} and ${bashInstructions[$index]}";
 		echo "";
-		echo "";
-		echo "TEST NUMBER ${index}: ${pipexInstructions[$index]} and ${bashInstructions[$index]}";
 		echo "BASH:";
 		eval "${bashInstructions[$index]}";
 		returnBash=$?;
 		if [ -f "outfile" ]; then
-			echo ""
-			echo "Content of outfile from bash:"
-			cat outfile
+			echo "";
+			echo "Content of outfile from bash:";
+			cat outfile;
 			rm -f outfile;
 		fi
 		echo "";
@@ -113,22 +113,30 @@ while [ $index -le $sizeArray ]; do
 		eval "${pipexInstructions[$index]}";
 		returnPipex=$?
 		if [ -f "outfile" ]; then
-			echo ""
-			echo "Content of outfile from pipex:"
-			cat outfile
-			rm -f outfile
+			echo "";
+			echo "Content of outfile from pipex:";
+			cat outfile;
+			rm -f outfile;
 		fi
 		echo "";
-		echo "Return value of bash:${returnBash}. Return value of pipex:${returnPipex}";
+		echo "Return value of bash: ${returnBash}. Return value of pipex: ${returnPipex}";
+		echo -n "Result of return: ";
+		if [ $returnBash -ne $returnPipex ]; then
+			echo -e "${red}KO.${yellow} A difference in the return value doesn't mean that the project should be failed${nocolor}";
+		else
+			echo -e "${green}OK.${nocolor}";
+		fi
 		echo "";
+	} 2>&1 | tee test"$(expr $index + 1)".txt;
+	{
 		echo "";
 		echo "Testing leaks with valgrind";
 		echo "";
 		echo "";
 		eval "valgrind --leak-check=full --show-reachable=yes --track-origins=yes --verbose --tool=memcheck --trace-children=yes --track-fds=yes ${pipexInstructions[$index]}";
-	} &> test${index}.txt;
-	mv test${index}.txt testValgrind/
-	echo -e "${yellow}Done. Check the file test${index}.txt inside the folder testValgrind to see the results.${nocolor}"
+	} &>> test"$(expr $index + 1)".txt;
+	mv test"$(expr $index + 1)".txt testValgrind/
+	echo -e "${yellow}Done. If you want to check memory leaks and memory issues, check the file test$(expr $index + 1).txt inside the folder testValgrind to see the results.${nocolor}"
 	((index++));
 	echo "";
 	echo "";
@@ -161,6 +169,18 @@ mv test17.txt testValgrind/
 	cat outfile;
 } &> test18.txt;
 mv test18.txt testValgrind/;
+{
+	echo ""
+	echo ""
+	echo "TEST NUMBER 19 : ./pipex infile2 ls \"wc -l\" outfile when malloc() fails";
+	cc -fPIC -shared mock_malloc_1.c -o libmockmalloc.so
+	LD_PRELOAD=/pipex/libmockmalloc.so ./pipex infile2 ls "wc -l" outfile
+	echo ""
+	echo "Testing leaks with valgrind: This will be stored in the in test19.txt";
+	LD_PRELOAD=/pipex/libmockmalloc.so valgrind --leak-check=full --show-reachable=yes --track-origins=yes --verbose --tool=memcheck --trace-children=yes --track-fds=yes ./pipex infile2 ls "wc -l" outfile;
+	cat outfile;
+} &> test19.txt;
+mv test19.txt testValgrind/;
 bash unsetting.sh;
 echo -e "${green}Test for mandatory part done!!${nocolor}"
 make fclean > /dev/null

@@ -102,7 +102,7 @@ EOF
 
 docker-compose up
 if [ $? -ne 0 ]; then
-	echo -e "${red}The execution of docker-compose fail. Make sure that you have a valid installation of docker in your machine${nocolor}";
+	echo -e "${red}The execution of docker-compose failed. Make sure that you have a valid installation of docker in your machine${nocolor}";
 	rm -rf temp_files/;
 	rm -rf Dockerfile;
 	rm -rf docker-compose.yml;
