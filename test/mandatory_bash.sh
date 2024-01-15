@@ -143,11 +143,11 @@ while [ $index -lt $sizeArray ]; do
 	} &>> test"$(expr $index + 1)".txt;
 	{
 		echo -ne "${yellow}Checking leaks: ${nocolor}";
-		if [ $valgrindReturn -eq $valgrindConst ]; then
-			echo -e "${red}KO.${nocolor}";
+		if [ $valgrindReturn -ne $valgrindConst ]; then
+			echo -e "${green}OK.${nocolor}";
 			echo "";
 		else
-			echo -e "${green}OK.${nocolor}";
+			echo -e "${red}KO.${nocolor}";
 			echo "";
 		fi
 	} 2>&1 | tee -a test"$(expr $index + 1)".txt

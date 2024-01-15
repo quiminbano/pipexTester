@@ -55,11 +55,11 @@ unset PATH;
 	}  &>> testValgrind/test17.txt
 	{
 		echo -ne "${yellow}Checking leaks: ${nocolor}";
-		if [ $valgrindReturn -eq 200 ]; then
-			echo -e "${red}KO.${nocolor}";
+		if [ $valgrindReturn -ne $valgrindConst ]; then
+			echo -e "${green}OK.${nocolor}";
 			echo "";
 		else
-			echo -e "${green}OK.${nocolor}";
+			echo -e "${red}KO.${nocolor}";
 			echo "";
 		fi
 	} 2>&1 | /usr/bin/tee -a testValgrind/test17.txt
@@ -112,11 +112,11 @@ unset PATH;
 	}  &>> testValgrind/test18.txt
 	{
 		echo -ne "${yellow}Checking leaks: ${nocolor}";
-		if [ $valgrindReturn -eq $valgrindConst ]; then
-			echo -e "${red}KO.${nocolor}";
+		if [ $valgrindReturn -ne $valgrindConst ]; then
+			echo -e "${green}OK.${nocolor}";
 			echo "";
 		else
-			echo -e "${green}OK.${nocolor}";
+			echo -e "${red}KO.${nocolor}";
 			echo "";
 		fi
 	} 2>&1 | /usr/bin/tee -a testValgrind/test18.txt
