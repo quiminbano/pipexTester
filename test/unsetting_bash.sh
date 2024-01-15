@@ -52,6 +52,7 @@ unset PATH;
 		echo "";
 		echo "";
 		/usr/bin/valgrind --leak-check=full --show-leak-kinds=all --undef-value-errors=no --error-exitcode=200 --track-fds=yes ./pipex infile2 ls "wc -l" outfile;
+		valgrindReturn=$?;
 	}  &>> testValgrind/test17.txt
 	{
 		echo -ne "${yellow}Checking leaks: ${nocolor}";
@@ -109,6 +110,7 @@ unset PATH;
 		echo "";
 		echo "";
 		/usr/bin/valgrind --leak-check=full --show-leak-kinds=all --undef-value-errors=no --error-exitcode=200 --track-fds=yes ./pipex infile2 ls "wc -l" outfile;
+		valgrindReturn=$?;
 	}  &>> testValgrind/test18.txt
 	{
 		echo -ne "${yellow}Checking leaks: ${nocolor}";

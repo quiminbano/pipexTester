@@ -46,7 +46,9 @@ bashInstructions=("< '' '' | '' > ''" \
 
 echo -e "${yellow}Testing Makefile rules:${nocolor}";
 echo "";
-mkdir myfolder;
+if [ ! -d "myfolder" ]; then
+	mkdir myfolder;
+fi
 make > /dev/null
 if [ $? -ne 0 ]; then
 	echo -e "${red}Error compiling the Makefile with the rule make all${nocolor}";
@@ -81,10 +83,6 @@ sleep 2
 echo -e "${yellow}Creating files for testing.${nocolor}"
 if [ ! -d "testValgrind" ]; then
 	mkdir testValgrind;
-else
-	cd testValgrind;
-	rm *;
-	cd ..;
 fi
 echo "THIS IS AN INFILE" > infile
 echo -e "hello;world\nhola;mundo" > infile2
@@ -107,6 +105,9 @@ while [ $index -lt $sizeArray ]; do
 		echo "BASH:";
 		eval "${bashInstructions[$index]}";
 		returnBash=$?;
+		eval "${bashInstructions[$index]}" &> temp;
+		cat temp | awk -F ":" '{print $(NF-1), $NF}' > shell_output;
+		rm temp;
 		if [ -f "outfile" ]; then
 			echo "";
 			echo "Content of outfile from bash:";
@@ -117,6 +118,8 @@ while [ $index -lt $sizeArray ]; do
 		echo "PIPEX:";
 		eval "${pipexInstructions[$index]}";
 		returnPipex=$?
+		eval "${pipexInstructions[$index]}" &> temp;
+		cat temp | awk -F ":" '{print $(NF-1), $NF}' > pipex_output;
 		if [ -f "outfile" ]; then
 			echo "";
 			echo "Content of outfile from pipex:";
@@ -132,6 +135,15 @@ while [ $index -lt $sizeArray ]; do
 			echo -e "${green}OK.${nocolor}";
 		fi
 		echo "";
+		if [ $index -ne 6 ]; then
+			echo -ne "${yellow}Checking error output: ${nocolor}";
+			diff shell_output pipex_output;
+			if [ $? -eq 1 ]; then
+				echo -e "${red}KO.${nocolor}";
+			else
+				echo -e "${green}OK.${nocolor}";
+			fi
+		fi
 	} 2>&1 | tee test"$(expr $index + 1)".txt;
 	{
 		echo "";
