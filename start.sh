@@ -93,7 +93,10 @@ RUN apk update && \
 	apk upgrade && \
 	echo "y" | apk add --no-cache alpine-sdk && \
 	echo "y" | apk add --no-cache zsh && \
-	echo "y" | apk add --no-cache valgrind valgrind-dev
+	echo "y" | apk add --no-cache valgrind valgrind-dev && \
+	echo "y" | apk add --no-cache py3-pip && \
+	python -m pip install --upgrade --break-system-packages pip setuptools && \
+	python -m pip install --break-system-packages norminette
 
 COPY ./temp_files /pipex
 
@@ -116,26 +119,13 @@ ${caseForDockerfile}
 CMD ["/usr/local/bin/bash", "interface.sh"]
 EOF
 
-<< EOF cat > docker-compose.yml
-version: '3.8'
-
-services:
-  pipex:
-    build: ./
-    volumes:
-    - ./testValgrind:/pipex/testValgrind
-    - ./testValgrind_bonus:/pipex/testValgrind_bonus
-EOF
-
 docker-compose up
 if [ $? -ne 0 ]; then
 	echo -e "${red}The execution of docker-compose failed. Make sure that you have a valid installation of docker in your machine${nocolor}";
 	rm -rf temp_files/;
 	rm -rf Dockerfile;
-	rm -rf docker-compose.yml;
 	exit 1;
 fi
 rm -rf temp_files/;
 rm -rf Dockerfile;
-rm -rf docker-compose.yml;
 exit 0;

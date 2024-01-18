@@ -27,7 +27,7 @@ pipexInstructions=("./pipex '' '' '' ''" \
 					"./pipex 'infile2' '\a\b\c' '\"l\"\"s\"\"\"\ \"\"\"\"\"-\"\"l\"\"a\"' 'outfile'" \
 					"./pipex 'infile2' '\a\b\c\' '\"l\"\"s\"\"\"\ \"\"\"\"\"-\"\"l\"\"a\"' 'outfile'")
 
-bashInstructions=("< '' '' | '' > ''" \
+shellInstructions=("< '' '' | '' > ''" \
 				"< '' cat | cat > ''" \
 				"< infile cat | cat > ''" \
 				"< '' cat | cat > outfile" \
@@ -43,7 +43,15 @@ bashInstructions=("< '' '' | '' > ''" \
 				"< infile2 \"l\"\"s\" | \"l\"\"s\"\"\" \"\"\"\"\"-\"\"l\"\"a\" > outfile" \
 				"< infile2 \a\b\c | \"l\"\"s\"\"\"\ \"\"\"\"\"-\"\"l\"\"a\" > outfile" \
 				"< infile2 \a\b\c | \"l\"\"s\"\"\"\ \"\"\"\"\"-\"\"l\"\"a\" > outfile")
-
+echo "";
+echo -ne "${yellow}Checking norminette:${nocolor} ";
+norminette &> /dev/null;
+if [ $? -ne 0 ]; then
+	echo -e "${red}KO.${nocolor}";
+else
+	echo -e "${green}OK.${nocolor}";
+fi
+echo "";
 echo -e "${yellow}Testing Makefile rules:${nocolor}";
 echo "";
 if [ ! -d "myfolder" ]; then
@@ -63,9 +71,17 @@ if [ $? -ne 0 ]; then
 	echo -e "${red}Error executing the rule make clean${nocolor}";
 	exit 1;
 fi
+if [ ! -f "pipex" ]; then
+	echo -e "${red}pipex executable not found after using make clean.${nocolor}"
+	exit 1;
+fi
 make fclean > /dev/null
 if [ $? -ne 0 ]; then
 	echo -e "${red}Error executing the rule make fclean${nocolor}";
+	exit 1;
+fi
+if [ -f "pipex" ]; then
+	echo -e "${red}pipex executable found after using make fclean.${nocolor}"
 	exit 1;
 fi
 make re > /dev/null
@@ -84,13 +100,16 @@ echo -e "${yellow}Creating files for testing.${nocolor}"
 if [ ! -d "testValgrind" ]; then
 	mkdir testValgrind;
 fi
-echo "THIS IS AN INFILE" > infile
-echo -e "hello;world\nhola;mundo" > infile2
-
+if [ ! -f "infile" ]; then
+	echo "THIS IS AN INFILE" > infile;
+fi
+if [ ! -f "outfile" ]; then
+	echo -e "hello;world\nhola;mundo" > infile2;
+fi
 cc -Wall -Wextra -Werror testsegv.c -o testsegv;
 
 returnPipex=0
-returnBash=0
+returnShell=0
 index=0
 sizeArray=${#pipexInstructions[@]}
 echo "";
@@ -100,12 +119,12 @@ while [ $index -lt $sizeArray ]; do
 	echo -e "${yellow}Performing test number $(expr $index + 1).${nocolor}";
 	echo "";
 	{
-		echo "TEST NUMBER $(expr $index + 1): ${pipexInstructions[$index]} and ${bashInstructions[$index]}";
+		echo "TEST NUMBER $(expr $index + 1): ${pipexInstructions[$index]} and ${shellInstructions[$index]}";
 		echo "";
 		echo "BASH:";
-		eval "${bashInstructions[$index]}";
-		returnBash=$?;
-		eval "${bashInstructions[$index]}" &> temp;
+		eval "${shellInstructions[$index]}";
+		returnShell=$?;
+		eval "${shellInstructions[$index]}" &> temp;
 		cat temp | awk -F ":" '{print $(NF-1), $NF}' > shell_output;
 		rm temp;
 		if [ -f "outfile" ]; then
@@ -127,9 +146,9 @@ while [ $index -lt $sizeArray ]; do
 			rm -f outfile;
 		fi
 		echo "";
-		echo "Return value of bash: ${returnBash}. Return value of pipex: ${returnPipex}";
+		echo "Return value of bash: ${returnShell}. Return value of pipex: ${returnPipex}";
 		echo -n "Result of return: ";
-		if [ $returnBash -ne $returnPipex ]; then
+		if [ $returnShell -ne $returnPipex ]; then
 			echo -e "${red}KO.${yellow} A difference in the return value doesn't mean that the project should be failed${nocolor}";
 		else
 			echo -e "${green}OK.${nocolor}";
@@ -164,7 +183,7 @@ while [ $index -lt $sizeArray ]; do
 		fi
 	} 2>&1 | tee -a test"$(expr $index + 1)".txt
 	mv test"$(expr $index + 1)".txt testValgrind/
-	echo -e "${yellow}Done. If you want to check memory leaks and memory issues, check the file test$(expr $index + 1).txt inside the folder testValgrind to see the results.${nocolor}"
+	echo -e "${yellow}Done. If you want to check the output given by valgrind, check the file test$(expr $index + 1).txt inside the folder testValgrind to see the results.${nocolor}"
 	((index++));
 	echo "";
 	echo "";

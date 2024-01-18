@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  pipex:
+    build: ./
+    volumes:
+    - ./testValgrind:/pipex/testValgrind
+    - ./testValgrind_bonus:/pipex/testValgrind_bonus
