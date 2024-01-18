@@ -3,6 +3,8 @@ version: '3.8'
 services:
   pipex:
     build: ./
+    stdin_open: true
+    tty: true
     volumes:
     - ./testValgrind:/pipex/testValgrind
     - ./testValgrind_bonus:/pipex/testValgrind_bonus

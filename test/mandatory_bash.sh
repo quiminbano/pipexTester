@@ -11,7 +11,6 @@ nocolor='\033[0m'
 brightnocolor='\033[1m'
 
 valgrindConst=200;
-options=("y" "n")
 pipexInstructions=("./pipex '' '' '' ''" \
 					"./pipex '' 'cat' 'cat' ''" \
 					"./pipex 'infile' 'cat' 'cat' ''" \
@@ -26,9 +25,11 @@ pipexInstructions=("./pipex '' '' '' ''" \
 					"./pipex 'infile' 'cat' './myfolder' 'outfile2'" \
 					"./pipex 'testsegv.c' 'cat' 'grep str\ =\ NULL' 'outfile2'" \
 					"./pipex 'infile2' 'cat' 'awk -F \";\" \"{print \$1}\"' 'outfile2'" \
-					"./pipex 'infile2' '\"l\"\"s\"' '\"i\"\"p\"\"\" \"\"\"\"\"-\"\"\"\"s\" \"\"\"l\"\"i\"\"nk\"' 'outfile2'" \
+					"./pipex 'infile2' '\"l\"\"s\"' '\"normi\"\"\"\"nette\" \"\"\"-\"\"R\"\"\" \"CheckForbi\"\"\"\"ddenSo\"\"urce\"\"Header\"' 'outfile2'" \
 					"./pipex 'infile2' '\a\b\c' '\"l\"\"s\"\"\"\ \"\"\"\"\"-\"\"l\"\"a\"' 'outfile2'" \
-					"./pipex 'infile2' '\a\b\c\' '\"l\"\"s\"\"\"\ \"\"\"\"\"-\"\"l\"\"a\"' 'outfile2'")
+					"./pipex 'infile2' '\a\b\c\' '\"l\"\"s\"\"\"\ \"\"\"\"\"-\"\"l\"\"a\"' 'outfile2'" \
+					"./pipex 'infile2' 'myfolder' 'myfolder' 'outfile2'" \
+					"./pipex 'infile2' 'copipex' 'copipex' 'outfile2'")
 
 shellInstructions=("< '' '' | '' > ''" \
 				"< '' cat | cat > ''" \
@@ -44,9 +45,11 @@ shellInstructions=("< '' '' | '' > ''" \
 				"< infile cat | ./myfolder > outfile" \
 				"< testsegv.c cat | grep str\ =\ NULL > outfile" \
 				"< infile2 cat | awk -F \";\" '{print \$1}' > outfile" \
-				"< infile2 \"l\"\"s\" | \"i\"\"p\"\"\" \"\"\"\"\"-\"\"\"\"s\" \"\"\"l\"\"i\"\"nk\" > outfile" \
+				"< infile2 \"normi\"\"\"\"nette\" \"\"\"-\"\"R\"\"\" \"CheckForbi\"\"\"\"ddenSo\"\"urce\"\"Header\" > outfile" \
 				"< infile2 \a\b\c | \"l\"\"s\"\"\"\ \"\"\"\"\"-\"\"l\"\"a\" > outfile" \
-				"< infile2 \a\b\c | \"l\"\"s\"\"\"\ \"\"\"\"\"-\"\"l\"\"a\" > outfile")
+				"< infile2 \a\b\c | \"l\"\"s\"\"\"\ \"\"\"\"\"-\"\"l\"\"a\" > outfile" \
+				"< infile2 myfolder | myfolder > outfile" \
+				"< infile2 copipex | copipex > outfile")
 echo "";
 echo -ne "${yellow}Checking norminette:${nocolor} ";
 norminette &> /dev/null;
@@ -121,36 +124,37 @@ echo -e "${yellow}PERMORMING TESTS. CHECK THE FOLDER testValgrind TO SEE THE RES
 echo ""
 flag=0;
 while [ $index -lt $sizeArray ]; do
-	select opt in "${options[@]}";
+	while [ $index -ge 9 ] && [ $flag -eq 0 ];
 	do
-		echo -e "${brightyellow}Between the tests 10 and 17, it is not necessary, in my opinion, to handle these cases exactly as your shell of preference does.\n \
-		However, these tests should never crash your pipex.\n \
-		Press y to continue to these tests or press n to skip these tests and go to test 18 or press q to quit (y/n/q)${nocolor}";
+		echo -e "${brightyellow}Between the tests 10 and 19, it is not necessary, in my opinion, to handle these cases exactly as your shell of preference does.\nHowever, these tests should never crash your pipex.\nPress y to continue to these tests or press n to skip these tests and go to test 20 or press q to quit (y/n/q)${nocolor}";
 		read condition1;
-		case $(echo "${condition1}" | tr '[:upper:]' '[:lower:]') in
-		"y")
+		readStatus=$?;
+		contidion1=$(echo "$condition1" | tr '[:upper:]' '[:lower:]')
+		if [ "${condition1}" == "y" ]; then
 			flag=1;
 			break
-			;;
-		"n")
+		elif [ "${condition1}" == "n" ]; then
 			flag=2;
 			break
-			;;
-		"q")
+		elif [ "${condition1}" == "q" ] || [ $readStatus -ne 0 ]; then
 			echo -e "${green}Test for mandatory part done!!${nocolor}";
 			exit 0;
-			;;
-		*)
+		else
 			echo -e "${brightred}Option not valid. Try again please.${nocolor}";
 			echo "";
-			;;
-		esac
+		fi
 	done
 	if [ $flag -eq 2 ]; then
 		break
 	fi
 	echo -e "${yellow}Performing test number $(expr $index + 1).${nocolor}";
 	echo "";
+	if [ $index -eq 17 ]; then
+		echo -e "${yellow}Adding the folder where pipex is to the PATH.${nocolor}";
+		export PATH=$(pwd):$PATH;
+		cp pipex copipex;
+		chmod -rwx copipex;
+	fi
 	{
 		echo "TEST NUMBER $(expr $index + 1): ${pipexInstructions[$index]} and ${shellInstructions[$index]}";
 		echo "";
@@ -173,8 +177,8 @@ while [ $index -lt $sizeArray ]; do
 			eval "${pipexInstructions[$index]} &";
 		fi
 		if [ $index -eq 3 ] || [ $index -eq 8 ]; then
-			echo -ne "${yellow}Checking the existance of a output file: ${nocolor}";
-			sleep 1;
+			echo -ne "${yellow}Checking the existance of an output file: ${nocolor}";
+			usleep 100000;
 			if [ ! -f "outfile2" ]; then
 				echo -e "${red}KO.${nocolor}";
 				echo "";
@@ -193,7 +197,7 @@ while [ $index -lt $sizeArray ]; do
 				echo -e "${green}OK.${nocolor}";
 				echo "";
 			fi
-			sleep 4;
+			usleep 4900000;
 		fi
 		before=$(date +%s);
 		eval "${pipexInstructions[$index]}" &> temp;
@@ -254,7 +258,7 @@ while [ $index -lt $sizeArray ]; do
 		valgrindReturn="$?";
 	} &>> test"$(expr $index + 1)".txt;
 	{
-		echo -ne "${yellow}Checking leaks: ${nocolor}";
+		echo -ne "${yellow}Checking leaks and memory errors: ${nocolor}";
 		if [ $valgrindReturn -ne $valgrindConst ]; then
 			echo -e "${green}OK.${nocolor}";
 			echo "";
@@ -270,21 +274,21 @@ while [ $index -lt $sizeArray ]; do
 	echo "";
 	rm -f outfile;
 	rm -f outfile2;
-	select opt2 in "${options[@]}"
+	while true;
 	do
 		echo -e "${brightnocolor}Do you want to continue to the next test? Press y to continue, press n to finish. (y/n).${nocolor}";
-		case $(echo "$opt" | tr '[:upper:]' '[:lower:]') in
-		"y")
+		read condition2;
+		readStatus=$?;
+		condition2=$(echo "$condition2" | tr '[:upper:]' '[:lower:]');
+		if [ "${condition2}" == "y" ]; then
 			break
-			;;
-		"n")
+		elif [ "${condition2}" == "n" ] || [ $readStatus -ne 0 ]; then
 			echo -e "${green}Test for mandatory part done!!${nocolor}"
 			exit 0;
-			;;
-		*)
+		else
 			echo -e "${brightred}Option not valid. Try again please.${nocolor}";
 			echo "";
-		esac
+		fi
 	done
 	echo "";
 done
