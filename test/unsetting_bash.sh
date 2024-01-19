@@ -20,10 +20,10 @@ unset PATH;
 		echo "";
 		echo "BASH:";
 		< infile2 ls | wc -l > outfile
-		returnBash=$?;
+		returnShell=$?;
 		if [ -f "outfile" ]; then
 		echo ""
-		echo "Content of outfile from zsh:"
+		echo "Content of outfile from bash:"
 		/bin/cat outfile
 		/bin/rm -f outfile;
 		fi
@@ -38,8 +38,8 @@ unset PATH;
 			/bin/rm -f outfile
 		fi
 		echo "";
-		echo "Return value of bash: ${returnBash}. Return value of pipex: ${returnPipex}";
-		if [ $returnBash -ne $returnPipex ]; then
+		echo "Return value of bash: ${returnShell}. Return value of pipex: ${returnPipex}";
+		if [ $returnShell -ne $returnPipex ]; then
 			echo -e "${red}KO.${yellow} A difference in the return value doesn't mean that the project should be failed${nocolor}";
 		else
 			echo -e "${green}OK.${nocolor}";
@@ -69,18 +69,21 @@ unset PATH;
 	echo "";
 }
 echo -e "${brightnocolor}Do you want to continue to the next test? Press y to continue, press n to finish. (y/n).${nocolor}";
-read condition;
-readStatus=$?;
-condition=$(echo "$condition" | /usr/bin/tr '[:upper:]' '[:lower:]');
-if [ "${condition}" == "y" ]; then
-	break
-elif [ "${condition}" == "n" ] || [ $readStatus -ne 0 ]; then
-	echo -e "${green}Test for mandatory part done!!${nocolor}"
-	exit 0;
-else
-	echo -e "${brightred}Option not valid. Try again please.${nocolor}";
-	echo "";
-	fi
+while true;
+do
+	read condition;
+	readStatus=$?;
+	condition=$(echo "$condition" | /usr/bin/tr '[:upper:]' '[:lower:]');
+	if [ "${condition}" == "y" ]; then
+		break
+	elif [ "${condition}" == "n" ] || [ $readStatus -ne 0 ]; then
+		echo -e "${green}Test for mandatory part done!!${nocolor}"
+		exit 0;
+	else
+		echo -e "${brightred}Option not valid. Try again please.${nocolor}";
+		echo "";
+	fi	
+done
 {
 	echo -e "${yellow}Performing test number 21.${nocolor}";
 	echo "";
@@ -90,10 +93,10 @@ else
 		echo "";
 		echo "BASH:";
 		< infile2 /bin/ls | /usr/bin/wc -l > outfile
-		returnBash=$?;
+		returnShell=$?;
 		if [ -f "outfile" ]; then
 		echo ""
-		echo "Content of outfile from zsh:"
+		echo "Content of outfile from bash:"
 		/bin/cat outfile
 		/bin/rm -f outfile;
 		fi
@@ -108,8 +111,8 @@ else
 			/bin/rm -f outfile
 		fi
 		echo "";
-		echo "Return value of bash: ${returnBash}. Return value of pipex: ${returnPipex}";
-		if [ $returnBash -ne $returnPipex ]; then
+		echo "Return value of bash: ${returnShell}. Return value of pipex: ${returnPipex}";
+		if [ $returnShell -ne $returnPipex ]; then
 			echo -e "${red}KO.${yellow} A difference in the return value doesn't mean that the project should be failed${nocolor}";
 		else
 			echo -e "${green}OK.${nocolor}";
