@@ -12,10 +12,10 @@ valgrindConst=200;
 
 unset PATH;
 {
-	echo -e "${yellow}Performing test number 20.${nocolor}";
+	echo -e "${yellow}Performing test number 22.${nocolor}";
 	echo "";
 	{
-		echo "TEST NUMBER 20 : ./pipex infile2 ls \"wc -l\" outfile and < infile2 ls | wc -l > outfile when PATH is not setted";
+		echo "TEST NUMBER 22 : ./pipex infile2 ls \"wc -l\" outfile and < infile2 ls | wc -l > outfile when PATH is not setted";
 		echo "";
 		echo "";
 		echo "BASH:";
@@ -45,7 +45,7 @@ unset PATH;
 			echo -e "${green}OK.${nocolor}";
 		fi
 		echo "";
-	} 2>&1 | /usr/bin/tee testValgrind/test20.txt;
+	} 2>&1 | /usr/bin/tee testValgrind/test22.txt;
 	{
 		echo "";
 		echo "Testing leaks with valgrind: This will be stored in the in test20.txt";
@@ -53,7 +53,7 @@ unset PATH;
 		echo "";
 		/usr/bin/valgrind --leak-check=full --show-leak-kinds=all --undef-value-errors=no --error-exitcode=200 --track-fds=yes ./pipex infile2 ls "wc -l" outfile;
 		valgrindReturn=$?;
-	}  &>> testValgrind/test20.txt
+	}  &>> testValgrind/test22.txt
 	{
 		echo -ne "${yellow}Checking leaks and memory errors: ${nocolor}";
 		if [ $valgrindReturn -ne $valgrindConst ]; then
@@ -63,7 +63,7 @@ unset PATH;
 			echo -e "${red}KO.${nocolor}";
 			echo "";
 		fi
-	} 2>&1 | /usr/bin/tee -a testValgrind/test20.txt
+	} 2>&1 | /usr/bin/tee -a testValgrind/test22.txt
 	echo -e "${yellow}Done. If you want to check memory leaks and memory issues, check the file test20.txt inside the folder testValgrind to see the results.${nocolor}"
 	echo "";
 	echo "";
@@ -88,7 +88,7 @@ done
 	echo -e "${yellow}Performing test number 21.${nocolor}";
 	echo "";
 	{
-		echo "TEST NUMBER 21 : ./pipex infile2 /bin/ls \"/usr/bin/wc -l\" outfile and < infile2 /bin/ls | /usr/bin/wc -l > outfile when PATH is not setted";
+		echo "TEST NUMBER 23 : ./pipex infile2 /bin/ls \"/usr/bin/wc -l\" outfile and < infile2 /bin/ls | /usr/bin/wc -l > outfile when PATH is not setted";
 		echo "";
 		echo "";
 		echo "BASH:";
@@ -118,15 +118,15 @@ done
 			echo -e "${green}OK.${nocolor}";
 		fi
 		echo "";
-	} 2>&1 | /usr/bin/tee testValgrind/test21.txt;
+	} 2>&1 | /usr/bin/tee testValgrind/test23.txt;
 	{
 		echo "";
-		echo "Testing leaks with valgrind: This will be stored in the in test21.txt";
+		echo "Testing leaks with valgrind: This will be stored in the in test23.txt";
 		echo "";
 		echo "";
 		/usr/bin/valgrind --leak-check=full --show-leak-kinds=all --undef-value-errors=no --error-exitcode=200 --track-fds=yes ./pipex infile2 ls "wc -l" outfile;
 		valgrindReturn=$?;
-	}  &>> testValgrind/test21.txt
+	}  &>> testValgrind/test23.txt
 	{
 		echo -ne "${yellow}Checking leaks: ${nocolor}";
 		if [ $valgrindReturn -ne $valgrindConst ]; then
@@ -136,7 +136,7 @@ done
 			echo -e "${red}KO.${nocolor}";
 			echo "";
 		fi
-	} 2>&1 | /usr/bin/tee -a testValgrind/test21.txt
+	} 2>&1 | /usr/bin/tee -a testValgrind/test23.txt
 	echo -e "${yellow}Done. If you want to check memory leaks and memory issues, check the file test18.txt inside the folder testValgrind to see the results.${nocolor}"
 	echo "";
 	echo "";

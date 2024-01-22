@@ -293,7 +293,7 @@ while [ $index -le $sizeArray ]; do
 	echo "";
 done
 
-zsh unsetting_zsh.sh;
+zsh extratests_zsh.sh;
 echo -e "${green}Test for mandatory part done!!${nocolor}"
 make fclean > /dev/null
 exit 0;
