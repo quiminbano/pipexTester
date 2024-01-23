@@ -337,6 +337,10 @@ while [ $index -lt $sizeArray ]; do
 	rm -f outfile2;
 	while true;
 	do
+		echo "";
+		echo -e "${pink}Next test: ${pipexInstructions[$index]}${nocolor}";
+		echo -e "${pink}           ${shellInstructions[$index]}${nocolor}";
+		echo "";
 		echo -e "${brightnocolor}Do you want to continue to the next test? Press y to continue, press n to finish. (y/n).${nocolor}";
 		read condition2;
 		readStatus=$?;
