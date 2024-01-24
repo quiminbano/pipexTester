@@ -193,7 +193,7 @@ while [ $index -lt $sizeArray ]; do
 			flag=1;
 			break
 		elif [ "${condition1}" == "q" ] || [ $readStatus -ne 0 ]; then
-			echo -e "${green}Test for mandatory part done!!${nocolor}";
+			echo -e "${green}Test for bonus part done!!${nocolor}";
 			exit 0;
 		else
 			echo -e "${brightred}Option not valid. Try again please.${nocolor}";
@@ -338,8 +338,21 @@ while [ $index -lt $sizeArray ]; do
 	while true;
 	do
 		echo "";
-		echo -e "${pink}Next test: ${pipexInstructions[$index]}${nocolor}";
-		echo -e "${pink}           ${shellInstructions[$index]}${nocolor}";
+		if [ $index -ne 24 ]; then
+			echo -ne "${pink}Next test: ";
+			echo -n "${pipexInstructions[$index]}"
+			echo -e "${nocolor}";
+			echo -ne "${pink}           ";
+			echo -n "${shellInstructions[$index]}";
+			echo -e "${nocolor}";
+		else
+			echo -ne "${pink}Next test: ";
+			echo -n "./pipex infile2 ls \"wc -l\" outfile2 when PATH is not setted";
+			echo -e "${nocolor}";
+			echo -ne "${pink}           ";
+			echo -n "< infile2 ls | wc -l > outfile when PATH is not setted";
+			echo -e "${nocolor}";
+			fi
 		echo "";
 		echo -e "${brightnocolor}Do you want to continue to the next test? Press y to continue, press n to finish. (y/n).${nocolor}";
 		read condition2;
