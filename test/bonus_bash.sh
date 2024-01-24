@@ -347,10 +347,10 @@ while [ $index -lt $sizeArray ]; do
 			echo -e "${nocolor}";
 		else
 			echo -ne "${pink}Next test: ";
-			echo -n "./pipex infile2 ls \"wc -l\" outfile2 when PATH is not setted";
+			echo -n "./pipex here_doc END cat 'awk -F \";\" \"{print \$1}\"' outfile2";
 			echo -e "${nocolor}";
 			echo -ne "${pink}           ";
-			echo -n "< infile2 ls | wc -l > outfile when PATH is not setted";
+			echo -n "<< END cat | awk -F \";\" '{print \$1}' > outfile";
 			echo -e "${nocolor}";
 			fi
 		echo "";

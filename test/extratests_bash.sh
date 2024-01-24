@@ -56,7 +56,7 @@ unset PATH;
 	} 2>&1 | /usr/bin/tee testValgrind/test22.txt;
 	{
 		echo "";
-		echo "Testing leaks with valgrind: This will be stored in the in test20.txt";
+		echo "Testing leaks with valgrind: This will be stored in the in test22.txt";
 		echo "";
 		echo "";
 		/usr/bin/valgrind --leak-check=full --show-leak-kinds=all --undef-value-errors=no --error-exitcode=200 --track-fds=yes ./pipex infile2 ls "wc -l" outfile;
@@ -72,19 +72,19 @@ unset PATH;
 			echo "";
 		fi
 	} 2>&1 | /usr/bin/tee -a testValgrind/test22.txt
-	echo -e "${yellow}Done. If you want to check memory leaks and memory issues, check the file test20.txt inside the folder testValgrind to see the results.${nocolor}"
+	echo -e "${yellow}Done. If you want to check memory leaks and memory issues, check the file test22.txt inside the folder testValgrind to see the results.${nocolor}"
 	echo "";
 	echo "";
 	/bin/rm -f outfile;
 	/bin/rm -f outfile2;
 }
-echo -e "${brightnocolor}Do you want to continue to the next test? Press y to continue, press n to finish. (y/n).${nocolor}";
 while true;
 do
 	echo "";
 	echo -e "${pink}Next test: ./pipex infile2 /bin/ls \"/usr/bin/wc -l\" outfile when PATH is not setted${nocolor}";
 	echo -e "${pink}           < infile2 /bin/ls | /usr/bin/wc -l > when PATH is not setted${nocolor}";
 	echo "";
+	echo -e "${brightnocolor}Do you want to continue to the next test? Press y to continue, press n to finish. (y/n).${nocolor}";
 	read condition;
 	readStatus=$?;
 	condition=$(echo "$condition" | /usr/bin/tr '[:upper:]' '[:lower:]');
@@ -99,7 +99,7 @@ do
 	fi	
 done
 {
-	echo -e "${yellow}Performing test number 21.${nocolor}";
+	echo -e "${yellow}Performing test number 23.${nocolor}";
 	echo "";
 	{
 		echo "TEST NUMBER 23 : ./pipex infile2 /bin/ls \"/usr/bin/wc -l\" outfile2 and < infile2 /bin/ls | /usr/bin/wc -l > outfile when PATH is not setted";
@@ -159,7 +159,7 @@ done
 			echo "";
 		fi
 	} 2>&1 | /usr/bin/tee -a testValgrind/test23.txt
-	echo -e "${yellow}Done. If you want to check memory leaks and memory issues, check the file test18.txt inside the folder testValgrind to see the results.${nocolor}"
+	echo -e "${yellow}Done. If you want to check memory leaks and memory issues, check the file test23.txt inside the folder testValgrind to see the results.${nocolor}"
 	echo "";
 	echo "";
 	/bin/sleep 2;
