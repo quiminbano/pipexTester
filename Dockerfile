@@ -9,20 +9,4 @@ RUN apk update && \
 	python -m pip install --upgrade --break-system-packages pip setuptools && \
 	python -m pip install --break-system-packages norminette
 
-COPY ./temp_files /pipex
-
-WORKDIR /pipex
-
-COPY ./test .
-
-RUN chmod +x interface.sh && \
-	chmod +x mandatory_bash.sh && \
-	chmod +x mandatory_zsh.sh && \
-	chmod +x bonus_bash.sh && \
-	chmod +x bonus_zsh.sh && \
-	chmod +x extratests_bash.sh && \
-	chmod +x extratests_zsh.sh && \
-	chmod +x extratests_bonus_bash.sh && \
-	chmod +x extratests_bonus_zsh.sh
-
 CMD ["/usr/local/bin/bash"]

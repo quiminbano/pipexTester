@@ -10,6 +10,7 @@ pink='\033[38;5;161m'
 nocolor='\033[0m'
 brightnocolor='\033[1m'
 
+cd pipex/;
 echo "";
 echo -e "${pink}
 

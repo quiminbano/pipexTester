@@ -53,7 +53,7 @@ unset PATH;
 			echo -e "${green}OK.${nocolor}";
 		fi
 		echo "";
-	} 2>&1 | /usr/bin/tee testValgrind/test22.txt;
+	} 2>&1 | /usr/bin/tee /testValgrind/test22.txt;
 	{
 		echo "";
 		echo "Testing leaks with valgrind: This will be stored in the in test22.txt";
@@ -61,7 +61,7 @@ unset PATH;
 		echo "";
 		/usr/bin/valgrind --leak-check=full --show-leak-kinds=all --undef-value-errors=no --error-exitcode=200 --track-fds=yes ./pipex infile2 ls "wc -l" outfile;
 		valgrindReturn=$?;
-	}  &>> testValgrind/test22.txt
+	}  &>> /testValgrind/test22.txt
 	{
 		echo -ne "${yellow}Checking leaks and memory errors: ${nocolor}";
 		if [ $valgrindReturn -ne $valgrindConst ]; then
@@ -71,7 +71,7 @@ unset PATH;
 			echo -e "${red}KO.${nocolor}";
 			echo "";
 		fi
-	} 2>&1 | /usr/bin/tee -a testValgrind/test22.txt
+	} 2>&1 | /usr/bin/tee -a /testValgrind/test22.txt
 	echo -e "${yellow}Done. If you want to check memory leaks and memory issues, check the file test22.txt inside the folder testValgrind to see the results.${nocolor}"
 	echo "";
 	echo "";
@@ -140,7 +140,7 @@ done
 			echo -e "${green}OK.${nocolor}";
 		fi
 		echo "";
-	} 2>&1 | /usr/bin/tee testValgrind/test23.txt;
+	} 2>&1 | /usr/bin/tee /testValgrind/test23.txt;
 	{
 		echo "";
 		echo "Testing leaks with valgrind: This will be stored in the in test23.txt";
@@ -148,7 +148,7 @@ done
 		echo "";
 		/usr/bin/valgrind --leak-check=full --show-leak-kinds=all --undef-value-errors=no --error-exitcode=200 --track-fds=yes ./pipex infile2 ls "wc -l" outfile;
 		valgrindReturn=$?;
-	}  &>> testValgrind/test23.txt
+	}  &>> /testValgrind/test23.txt
 	{
 		echo -ne "${yellow}Checking leaks: ${nocolor}";
 		if [ $valgrindReturn -ne $valgrindConst ]; then
@@ -158,7 +158,7 @@ done
 			echo -e "${red}KO.${nocolor}";
 			echo "";
 		fi
-	} 2>&1 | /usr/bin/tee -a testValgrind/test23.txt
+	} 2>&1 | /usr/bin/tee -a /testValgrind/test23.txt
 	echo -e "${yellow}Done. If you want to check memory leaks and memory issues, check the file test23.txt inside the folder testValgrind to see the results.${nocolor}"
 	echo "";
 	echo "";

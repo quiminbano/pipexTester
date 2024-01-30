@@ -159,13 +159,15 @@ if [ $binaryIndex -eq 2 ]; then
 	mv pipex_bonus pipex;
 fi
 echo -e "${yellow}Creating files for testing.${nocolor}"
-if [ ! -d "testValgrind_bonus" ]; then
+if [ ! -d "/testValgrind_bonus" ]; then
+	cd ..;
 	mkdir testValgrind_bonus;
+	cd "pipex/";
 fi
 if [ ! -f "infile" ]; then
 	echo "THIS IS AN INFILE" > infile;
 fi
-if [ ! -f "outfile" ]; then
+if [ ! -f "infile2" ]; then
 	echo -e "hello;world\nhola;mundo" > infile2;
 fi
 cc -Wall -Wextra -Werror testsegv.c -o testsegv;
@@ -328,7 +330,7 @@ while [ $index -lt $sizeArray ]; do
 			echo "";
 		fi
 	} 2>&1 | tee -a test"$index".txt
-	mv test"$index".txt testValgrind_bonus/
+	mv test"$index".txt /testValgrind_bonus/
 	echo -e "${yellow}Done. If you want to check the output given by valgrind, check the file test$index.txt inside the folder testValgrind_bonus to see the results.${nocolor}"
 	((index++));
 	echo "";

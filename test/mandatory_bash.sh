@@ -108,13 +108,15 @@ echo -e "${green}Good!! All the rules seems to work properly${nocolor}";
 echo "";
 sleep 2
 echo -e "${yellow}Creating files for testing.${nocolor}"
-if [ ! -d "testValgrind" ]; then
+if [ ! -d "/testValgrind" ]; then
+	cd ..;
 	mkdir testValgrind;
+	cd pipex/;
 fi
 if [ ! -f "infile" ]; then
 	echo "THIS IS AN INFILE" > infile;
 fi
-if [ ! -f "outfile" ]; then
+if [ ! -f "infile2" ]; then
 	echo -e "hello;world\nhola;mundo" > infile2;
 fi
 cc -Wall -Wextra -Werror testsegv.c -o testsegv;
@@ -277,7 +279,7 @@ while [ $index -lt $sizeArray ]; do
 			echo "";
 		fi
 	} 2>&1 | tee -a test"$(expr $index + 1)".txt
-	mv test"$(expr $index + 1)".txt testValgrind/
+	mv test"$(expr $index + 1)".txt /testValgrind/
 	echo -e "${yellow}Done. If you want to check the output given by valgrind, check the file test$(expr $index + 1).txt inside the folder testValgrind to see the results.${nocolor}"
 	((index++));
 	echo "";

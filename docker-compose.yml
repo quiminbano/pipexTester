@@ -6,5 +6,6 @@ services:
     stdin_open: true
     tty: true
     volumes:
-    - ./testValgrind:/pipex/testValgrind
-    - ./testValgrind_bonus:/pipex/testValgrind_bonus
+    - ./testValgrind:/testValgrind
+    - ./testValgrind_bonus:/testValgrind_bonus
+    - ./pipex:/pipex

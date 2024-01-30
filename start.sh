@@ -38,6 +38,14 @@ do
 		echo -e "${brightred}Option not valid. Try again please.${nocolor}";
 	fi
 done
+docker-compose up -d;
+if [ $? -ne 0 ]; then
+	echo -e "${red}The execution of docker-compose failed. Make sure that you have a valid installation of docker in your machine${nocolor}";
+	if [ -d "pipex" ]; then
+		rm -rf pipex/;
+	fi
+	exit 1;
+fi
 projectPath="$(pwd)/..";
 if [ ! -f "${projectPath}/Makefile" ]; then
 	echo -e "${red}Makefile not present in the project's folder${nocolor}";
@@ -47,24 +55,22 @@ if ! grep -q "pipex" "${projectPath}/Makefile"; then
 	echo -e "${red}Makefile does't create the binary pipex${nocolor}";
 	exit 1;
 fi
-mkdir temp_files;
-rsync -a --no-progress --exclude="$(basename $(pwd))" ../* temp_files/;
+echo "";
+echo -e "${brightnocolor}Copying your files into the container through the temp folder called pipex ${nocolor}";
+echo "";
+rsync -a --no-progress --exclude="$(basename $(pwd))" ../* pipex/;
 if [ $? -ne 0 ]; then
 	echo -e "${red}Error copying the project's files into the tester folder. Please install the tool rsync and try again. ${nocolor}";
 	exit 1;
 fi
-
-docker-compose up -d;
+rsync -a --no-progress test/* pipex/;
 if [ $? -ne 0 ]; then
-	echo -e "${red}The execution of docker-compose failed. Make sure that you have a valid installation of docker in your machine${nocolor}";
-	rm -rf temp_files/;
-	rm -rf Dockerfile;
+	echo -e "${red}Error copying the tests files into the temp folder. Please install the tool rsync and try again. ${nocolor}";
 	exit 1;
 fi
 docker-compose exec pipex bash /pipex/interface.sh
-docker-compose down
-rm -rf temp_files/;
-rm -rf Dockerfile;
+docker-compose down --remove-orphans
+rm -rf pipex/;
 echo "";
 echo -e "${brightgreen}All tests done. Hope to see you again!!${nocolor}";
 exit 0;

@@ -62,7 +62,7 @@ EOF
 			echo -e "${green}OK.${nocolor}";
 		fi
 		echo "";
-	} 2>&1 | /usr/bin/tee testValgrind_bonus/test24.txt;
+	} 2>&1 | /usr/bin/tee /testValgrind_bonus/test24.txt;
 	{
 		echo "";
 		echo "Testing leaks with valgrind: This will be stored in the in test24.txt";
@@ -75,7 +75,7 @@ everyone;is
 END
 EOF
 		valgrindReturn=$?;
-	}  &>> testValgrind_bonus/test24.txt
+	}  &>> /testValgrind_bonus/test24.txt
 	{
 		echo -ne "${yellow}Checking leaks and memory errors: ${nocolor}";
 		if [ $valgrindReturn -ne $valgrindConst ]; then
@@ -85,7 +85,7 @@ EOF
 			echo -e "${red}KO.${nocolor}";
 			echo "";
 		fi
-	} 2>&1 | /usr/bin/tee -a testValgrind_bonus/test24.txt
+	} 2>&1 | /usr/bin/tee -a /testValgrind_bonus/test24.txt
 	echo -e "${yellow}Done. If you want to check memory leaks and memory issues, check the file test24.txt inside the folder testValgrind_bonus to see the results.${nocolor}"
 	echo "";
 	echo "";
@@ -166,7 +166,7 @@ EOF
 			echo -e "${green}OK.${nocolor}";
 		fi
 		echo "";
-	} 2>&1 | /usr/bin/tee testValgrind_bonus/test25.txt;
+	} 2>&1 | /usr/bin/tee /testValgrind_bonus/test25.txt;
 	{
 		echo "";
 		echo "Testing leaks with valgrind: This will be stored in the in test25.txt";
@@ -179,7 +179,7 @@ everyone;is
 END
 EOF
 		valgrindReturn=$?;
-	}  &>> testValgrind_bonus/test25.txt
+	}  &>> /testValgrind_bonus/test25.txt
 	{
 		echo -ne "${yellow}Checking leaks and memory errors: ${nocolor}";
 		if [ $valgrindReturn -ne $valgrindConst ]; then
@@ -189,7 +189,7 @@ EOF
 			echo -e "${red}KO.${nocolor}";
 			echo "";
 		fi
-	} 2>&1 | /usr/bin/tee -a testValgrind_bonus/test25.txt
+	} 2>&1 | /usr/bin/tee -a /testValgrind_bonus/test25.txt
 	echo -e "${yellow}Done. If you want to check memory leaks and memory issues, check the file test25.txt inside the folder testValgrind_bonus to see the results.${nocolor}"
 	echo "";
 	echo "";
@@ -263,7 +263,7 @@ unset PATH;
 			echo -e "${green}OK.${nocolor}";
 		fi
 		echo "";
-	} 2>&1 | /usr/bin/tee testValgrind_bonus/test26.txt;
+	} 2>&1 | /usr/bin/tee /testValgrind_bonus/test26.txt;
 	{
 		echo "";
 		echo "Testing leaks with valgrind: This will be stored in the in test26.txt";
@@ -271,7 +271,7 @@ unset PATH;
 		echo "";
 		/usr/bin/valgrind --leak-check=full --show-leak-kinds=all --undef-value-errors=no --error-exitcode=200 --track-fds=yes ./pipex infile2 ls "wc -l" outfile;
 		valgrindReturn=$?;
-	}  &>> testValgrind_bonus/test26.txt
+	}  &>> /testValgrind_bonus/test26.txt
 	{
 		echo -ne "${yellow}Checking leaks and memory errors: ${nocolor}";
 		if [ $valgrindReturn -ne $valgrindConst ]; then
@@ -281,7 +281,7 @@ unset PATH;
 			echo -e "${red}KO.${nocolor}";
 			echo "";
 		fi
-	} 2>&1 | /usr/bin/tee -a testValgrind_bonus/test26.txt
+	} 2>&1 | /usr/bin/tee -a /testValgrind_bonus/test26.txt
 	echo -e "${yellow}Done. If you want to check memory leaks and memory issues, check the file test26.txt inside the folder testValgrind_bonus to see the results.${nocolor}"
 	echo "";
 	echo "";
@@ -350,7 +350,7 @@ done
 			echo -e "${green}OK.${nocolor}";
 		fi
 		echo "";
-	} 2>&1 | /usr/bin/tee testValgrind_bonus/test27.txt;
+	} 2>&1 | /usr/bin/tee /testValgrind_bonus/test27.txt;
 	{
 		echo "";
 		echo "Testing leaks with valgrind: This will be stored in the in test27.txt";
@@ -358,7 +358,7 @@ done
 		echo "";
 		/usr/bin/valgrind --leak-check=full --show-leak-kinds=all --undef-value-errors=no --error-exitcode=200 --track-fds=yes ./pipex infile2 ls "wc -l" outfile;
 		valgrindReturn=$?;
-	}  &>> testValgrind_bonus/test27.txt
+	}  &>> /testValgrind_bonus/test27.txt
 	{
 		echo -ne "${yellow}Checking leaks: ${nocolor}";
 		if [ $valgrindReturn -ne $valgrindConst ]; then
@@ -368,7 +368,7 @@ done
 			echo -e "${red}KO.${nocolor}";
 			echo "";
 		fi
-	} 2>&1 | /usr/bin/tee -a testValgrind_bonus/test27.txt
+	} 2>&1 | /usr/bin/tee -a /testValgrind_bonus/test27.txt
 	echo -e "${yellow}Done. If you want to check memory leaks and memory issues, check the file test27.txt inside the folder testValgrind_bonus to see the results.${nocolor}"
 	echo "";
 	echo "";
