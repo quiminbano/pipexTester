@@ -59,7 +59,7 @@ unset PATH;
 		echo "Testing leaks with valgrind: This will be stored in the in test22.txt";
 		echo "";
 		echo "";
-		/usr/bin/valgrind --leak-check=full --show-leak-kinds=all --undef-value-errors=no --error-exitcode=200 --track-fds=yes ./pipex infile2 ls "wc -l" outfile;
+		/usr/bin/valgrind --leak-check=full --show-leak-kinds=all --undef-value-errors=no --error-exitcode=200 --track-fds=yes ./pipex infile2 ls "wc -l" outfile2;
 		valgrindReturn=$?;
 	}  &>> /testValgrind/test22.txt
 	{
@@ -146,7 +146,7 @@ done
 		echo "Testing leaks with valgrind: This will be stored in the in test23.txt";
 		echo "";
 		echo "";
-		/usr/bin/valgrind --leak-check=full --show-leak-kinds=all --undef-value-errors=no --error-exitcode=200 --track-fds=yes ./pipex infile2 ls "wc -l" outfile;
+		/usr/bin/valgrind --leak-check=full --show-leak-kinds=all --undef-value-errors=no --error-exitcode=200 --track-fds=yes ./pipex infile2 /bin/ls "/usr/bin/wc -l" outfile2;
 		valgrindReturn=$?;
 	}  &>> /testValgrind/test23.txt
 	{

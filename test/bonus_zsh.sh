@@ -52,7 +52,7 @@ shellInstructions=("< '' '' | '' > ''" \
 				"< infile cat | ./myfolder > outfile" \
 				"< testsegv.c cat | grep str\ =\ NULL > outfile" \
 				"< infile2 cat | awk -F \";\" '{print \$1}' > outfile" \
-				"< infile2 \"normi\"\"\"\"nette\" \"\"\"-\"\"R\"\"\" \"CheckForbi\"\"\"\"ddenSo\"\"urce\"\"Header\" > outfile" \
+				"< infile2 \"l\"\"s\" | \"normi\"\"\"\"nette\" \"\"\"-\"\"R\"\"\" \"CheckForbi\"\"\"\"ddenSo\"\"urce\"\"Header\" > outfile" \
 				"< infile2 \a\b\c | \"l\"\"s\"\"\"\ \"\"\"\"\"-\"\"l\"\"a\" > outfile" \
 				"< infile2 \a\b\c | \"l\"\"s\"\"\"\ \"\"\"\"\"-\"\"l\"\"a\" > outfile" \
 				"< infile2 myfolder | myfolder > outfile" \
@@ -76,6 +76,11 @@ echo -e "${yellow}Testing Makefile rules:${nocolor}";
 echo "";
 if [ ! -d "myfolder" ]; then
 	mkdir myfolder;
+fi
+make fclean > /dev/null
+if [ $? -ne 0 ]; then
+	echo -e "${red}Error executing the rule make fclean${nocolor}";
+	exit 1;
 fi
 make > /dev/null
 if [ $? -ne 0 ]; then

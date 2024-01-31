@@ -49,11 +49,34 @@ shellInstructions=("< '' '' | '' > ''" \
 				"< infile cat | ./myfolder > outfile" \
 				"< testsegv.c cat | grep str\ =\ NULL > outfile" \
 				"< infile2 cat | awk -F \";\" '{print \$1}' > outfile" \
-				"< infile2 \"normi\"\"\"\"nette\" \"\"\"-\"\"R\"\"\" \"CheckForbi\"\"\"\"ddenSo\"\"urce\"\"Header\" > outfile" \
+				"< infile2 \"l\"\"s\" | \"normi\"\"\"\"nette\" \"\"\"-\"\"R\"\"\" \"CheckForbi\"\"\"\"ddenSo\"\"urce\"\"Header\" > outfile" \
 				"< infile2 \a\b\c | \"l\"\"s\"\"\"\ \"\"\"\"\"-\"\"l\"\"a\" > outfile" \
 				"< infile2 \a\b\c | \"l\"\"s\"\"\"\ \"\"\"\"\"-\"\"l\"\"a\" > outfile" \
 				"< infile2 myfolder | myfolder > outfile" \
 				"< infile2 copipex | copipex > outfile")
+
+shellInstructionsRedirections=("2> temp1 < '' '' | 2> temp2 '' > ''" \
+							"2> temp1 < '' cat | 2> temp2 cat > ''" \
+							"2> temp1 < infile cat | 2> temp2 cat > ''" \
+							"2> temp1 < '' cat | 2> temp2 cat > outfile" \
+							"2> temp1 < infile '' | 2> temp2 '' > outfile" \
+							"2> temp1 < '' sleep 5 | 2> temp2 '' > ''" \
+							"2> temp1 < '' '' | 2> temp2 sleep 5 > ''" \
+							"2> temp1 < infile cat | 2> temp2 cat > outfile" \
+							"2> temp1 < infile /bin/hello | 2> temp2 /bin/hello > outfile" \
+							"2> temp1 < infile /bin/echo hello world | 2> temp2 /bin/cat > outfile" \
+							"2> temp1 < infile sleep 5 | 2> temp2 echo hello world > outfile" \
+							"2> temp1 < infile ./testsegv | 2> temp2 ./testsegv > outfile" \
+							"2> temp1 < infile ./myfolder | 2> temp2 cat > outfile" \
+							"2> temp1 < infile cat | 2> temp2 ./myfolder > outfile" \
+							"2> temp1 < testsegv.c cat | 2> temp2 grep str\ =\ NULL > outfile" \
+							"2> temp1 < infile2 cat | 2> temp2 awk -F \";\" '{print \$1}' > outfile" \
+							"2> temp1 < infile2 \"l\"\"s\" | 2> temp2 \"normi\"\"\"\"nette\" \"\"\"-\"\"R\"\"\" \"CheckForbi\"\"\"\"ddenSo\"\"urce\"\"Header\" > outfile" \
+							"2> temp1 < infile2 \a\b\c | 2> temp2 \"l\"\"s\"\"\"\ \"\"\"\"\"-\"\"l\"\"a\" > outfile" \
+							"2> temp1 < infile2 \a\b\c | 2> temp2 \"l\"\"s\"\"\"\ \"\"\"\"\"-\"\"l\"\"a\" > outfile" \
+							"2> temp1 < infile2 myfolder | 2> temp2 myfolder > outfile" \
+							"2> temp1 < infile2 copipex | 2> temp2 copipex > outfile")
+
 echo "";
 echo -ne "${yellow}Checking norminette:${nocolor} ";
 norminette &> /dev/null;
@@ -67,6 +90,11 @@ echo -e "${yellow}Testing Makefile rules:${nocolor}";
 echo "";
 if [ ! -d "myfolder" ]; then
 	mkdir myfolder;
+fi
+make fclean > /dev/null
+if [ $? -ne 0 ]; then
+	echo -e "${red}Error executing the rule make fclean${nocolor}";
+	exit 1;
 fi
 make > /dev/null
 if [ $? -ne 0 ]; then
@@ -169,7 +197,8 @@ while [ $index -lt $sizeArray ]; do
 		echo "BASH:";
 		eval "${shellInstructions[$index]}";
 		returnShell=$?;
-		eval "${shellInstructions[$index]}" &> temp;
+		eval "${shellInstructionsRedirections[$index]}";
+		cat temp1 temp2 > temp;
 		cat temp | awk -F ":" '{print $(NF-1), $NF}' > shell_output;
 		rm temp;
 		if [ -f "outfile" ]; then
@@ -208,7 +237,7 @@ while [ $index -lt $sizeArray ]; do
 			usleep 4900000;
 		fi
 		before=$(date +%s);
-		eval "${pipexInstructions[$index]}" &> temp;
+		eval "${pipexInstructions[$index]}" 2> temp;
 		returnPipex=$?
 		after=$(date +%s);
 		if [ $index -eq 5 ] || [ $index -eq 6 ] || [ $index -eq 10 ] ; then
