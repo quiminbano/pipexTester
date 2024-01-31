@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#!/bin/bash
 
 red='\033[0;31m'
 brightred='\033[1;31m'

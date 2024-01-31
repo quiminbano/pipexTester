@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#!/bin/bash
 
 red='\033[0;31m'
 brightred='\033[1;31m'
@@ -68,20 +68,20 @@ echo -e "${brightnocolor}Starting the test...${nocolor}";
 echo "";
 
 if [ "${test}" == "mandatory" ] && [ "${type_shell}" == "bash" ]; then
-	/usr/local/bin/bash mandatory_bash.sh;
+	/bin/bash mandatory_bash.sh;
 fi
 if [ "${test}" == "mandatory" ] && [ "${type_shell}" == "zsh" ]; then
 	/bin/zsh mandatory_zsh.sh;
 fi
 if [ "${test}" == "bonus" ] && [ "${type_shell}" == "bash" ]; then
-	/usr/local/bin/bash bonus_bash.sh;
+	/bin/bash bonus_bash.sh;
 fi
 if [ "${test}" == "bonus" ] && [ "${type_shell}" == "zsh" ]; then
 	/bin/zsh bonus_zsh.sh;
 fi
 if [ "${test}" == "all" ] && [ "${type_shell}" == "bash" ]; then
-	/usr/local/bin/bash mandatory_bash.sh;
-	/usr/local/bin/bash bonus_bash.sh;
+	/bin/bash mandatory_bash.sh;
+	/bin/bash bonus_bash.sh;
 fi
 if [ "${test}" == "all" ] && [ "${type_shell}" == "zsh" ]; then
 	/bin/zsh mandatory_zsh.sh;
