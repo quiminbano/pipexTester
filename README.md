@@ -6,6 +6,8 @@ This unit tester was made to test the project called [pipex](https://github.com/
 
 This unit tester requires an installation of docker, docker-compose or docker desktop. Make sure you have them installed.
 
+If you are trying to run docker in a school computer from 42 network, you can install docker from the software center that the school provides for you. Then, you can run init_docker.sh, provided in [42 toolbox](https://github.com/alexandregv/42toolbox). This script should set up for you all the dependencies to run docker.
+
 #### How to install the tester.
 
 Clone this repository inside your pipex folder:
