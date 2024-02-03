@@ -8,4 +8,4 @@ services:
     volumes:
     - ./testValgrind:/testValgrind
     - ./testValgrind_bonus:/testValgrind_bonus
-    - ./pipex:/pipex
+    - ./temp_files:/temp_files

@@ -10,7 +10,7 @@ pink='\033[38;5;161m'
 nocolor='\033[0m'
 brightnocolor='\033[1m'
 
-cd pipex/;
+cp -r /temp_files/* /pipex;
 echo "";
 echo -e "${pink}
 

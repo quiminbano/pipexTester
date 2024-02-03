@@ -61,6 +61,31 @@ shellInstructions=("< '' '' | '' > ''" \
 				"< infile2 cat | awk -F \";\" '{print \$1}' | grep hello > outfile" \
 				"< '' cat | sleep 5 | cat > ''")
 
+shellInstructionsRedirections=("2> temp1 < '' '' | 2> temp2 '' > ''" \
+							"2> temp1 < '' cat | 2> temp2 cat > ''" \
+							"2> temp1 < infile cat | 2> temp2 cat > ''" \
+							"2> temp1 < '' cat | 2> temp2 cat > outfile" \
+							"2> temp1 < infile '' | 2> temp2 '' > outfile" \
+							"2> temp1 < '' sleep 5 | 2> temp2 '' > ''" \
+							"2> temp1 < '' '' | 2> temp2 sleep 5 > ''" \
+							"2> temp1 < infile cat | 2> temp2 cat > outfile" \
+							"2> temp1 < infile /bin/hello | 2> temp2 /bin/hello > outfile" \
+							"2> temp1 < infile /bin/echo hello world | 2> temp2 /bin/cat > outfile" \
+							"2> temp1 < infile sleep 5 | 2> temp2 echo hello world > outfile" \
+							"2> temp1 < infile ./testsegv | 2> temp2 ./testsegv > outfile" \
+							"2> temp1 < infile ./myfolder | 2> temp2 cat > outfile" \
+							"2> temp1 < infile cat | 2> temp2 ./myfolder > outfile" \
+							"2> temp1 < testsegv.c cat | 2> temp2 grep str\ =\ NULL > outfile" \
+							"2> temp1 < infile2 cat | 2> temp2 awk -F \";\" '{print \$1}' > outfile" \
+							"2> temp1 < infile2 \"l\"\"s\" | 2> temp2 \"normi\"\"\"\"nette\" \"\"\"-\"\"R\"\"\" \"CheckForbi\"\"\"\"ddenSo\"\"urce\"\"Header\" > outfile" \
+							"2> temp1 < infile2 \a\b\c | 2> temp2 \"l\"\"s\"\"\"\ \"\"\"\"\"-\"\"l\"\"a\" > outfile" \
+							"2> temp1 < infile2 \a\b\c | 2> temp2 \"l\"\"s\"\"\"\ \"\"\"\"\"-\"\"l\"\"a\" > outfile" \
+							"2> temp1 < infile2 myfolder | 2> temp2 myfolder > outfile" \
+							"2> temp1 < infile2 copipex | 2> temp2 copipex > outfile" \
+							"2> temp1 < infile2 cat | cat | cat | cat | cat | cat | cat | 2> temp2 cat > outfile" \
+							"2> temp1 < infile2 cat | awk -F \";\" '{print \$1}' | 2> temp2 grep hello > outfile" \
+							"2> temp1 < '' cat | sleep 5 | 2> temp2 cat > ''")
+
 binaryOptions=("pipex" "pipex_bonus")
 
 echo "";
@@ -82,12 +107,18 @@ if [ $? -ne 0 ]; then
 	echo -e "${red}Error executing the rule make fclean${nocolor}";
 	exit 1;
 fi
+ls "pipex" &> /dev/null
+if [ $? -eq 0 ]; then
+	echo -e "${red}pipex executable found after using make fclean.${nocolor}"
+	exit 1;
+fi
 make > /dev/null
 if [ $? -ne 0 ]; then
 	echo -e "${red}Error compiling the Makefile with the rule make all${nocolor}";
 	exit 1;
 fi
-if [ ! -f "pipex" ]; then
+ls "pipex" &> /dev/null
+if [ $? -ne 0 ]; then
 	echo -e "${red}pipex executable not found.${nocolor}"
 	exit 1;
 fi
@@ -96,7 +127,8 @@ if [ $? -ne 0 ]; then
 	echo -e "${red}Error executing the rule make clean${nocolor}";
 	exit 1;
 fi
-if [ ! -f "pipex" ]; then
+ls "pipex" &> /dev/null
+if [ $? -ne 0 ]; then
 	echo -e "${red}pipex executable not found after using make clean.${nocolor}"
 	exit 1;
 fi
@@ -105,7 +137,8 @@ if [ $? -ne 0 ]; then
 	echo -e "${red}Error executing the rule make fclean${nocolor}";
 	exit 1;
 fi
-if [ -f "pipex" ]; then
+ls "pipex" &> /dev/null
+if [ $? -eq 0 ]; then
 	echo -e "${red}pipex executable found after using make fclean.${nocolor}"
 	exit 1;
 fi
@@ -114,8 +147,19 @@ if [ $? -ne 0 ]; then
 	echo -e "${red}Error executing the rule make re${nocolor}";
 	exit 1;
 fi
-if [ ! -f "pipex" ]; then
+ls "pipex" &> /dev/null
+if [ $? -ne 0 ]; then
 	echo -e "${red}pipex executable not found.${nocolor}"
+	exit 1;
+fi
+make fclean > /dev/null
+if [ $? -ne 0 ]; then
+	echo -e "${red}Error executing the rule make fclean${nocolor}";
+	exit 1;
+fi
+ls "pipex" &> /dev/null
+if [ $? -eq 0 ]; then
+	echo -e "${red}pipex executable found after using make fclean.${nocolor}"
 	exit 1;
 fi
 make bonus > /dev/null
@@ -126,7 +170,8 @@ fi
 binaryIndex=1;
 while [ $binaryIndex -le 2 ];
 do
-	if [ -f "${binaryOptions[$binaryIndex]}" ]; then
+	ls "${binaryOptions[$binaryIndex]}" &> /dev/null
+	if [ $? -eq 0 ]; then
 		break
 	fi
 	((binaryIndex++));
@@ -140,7 +185,8 @@ if [ $? -ne 0 ]; then
 	echo -e "${red}Error executing the rule make clean${nocolor}";
 	exit 1;
 fi
-if [ ! -f "${binaryOptions[$binaryIndex]}" ]; then
+ls "${binaryOptions[$binaryIndex]}" &> /dev/null
+if [ $? -ne 0 ]; then
 	echo -e "${red}${binaryOptions[$binaryIndex]} executable not found after using make clean.${nocolor}"
 	exit 1;
 fi
@@ -149,7 +195,8 @@ if [ $? -ne 0 ]; then
 	echo -e "${red}Error executing the rule make fclean${nocolor}";
 	exit 1;
 fi
-if [ -f "${binaryOptions[$binaryIndex]}" ]; then
+ls "${binaryOptions[$binaryIndex]}" &> /dev/null
+if [ $? -eq 0 ]; then
 	echo -e "${red}${binaryOptions[$binaryIndex]} executable found after using make fclean.${nocolor}"
 	exit 1;
 fi
@@ -185,7 +232,7 @@ echo "";
 echo -e "${yellow}PERMORMING TESTS. CHECK THE FOLDER testValgrind_bonus TO SEE THE RESULTS${nocolor}";
 echo ""
 flag=0;
-while [ $index -lt $sizeArray ]; do
+while [ $index -le $sizeArray ]; do
 	while [ $index -ge 12 ] && [ $flag -eq 0 ];
 	do
 		echo -e "${brightyellow}Between the tests 12 and 21, it is not necessary, in my opinion, to handle these cases exactly as your shell of preference does.\nHowever, these tests should never crash your pipex.\nPress y to continue to these tests or press n to skip these tests and go to test 22 or press q to quit (y/n/q)${nocolor}";
@@ -223,7 +270,8 @@ while [ $index -lt $sizeArray ]; do
 		echo "BASH:";
 		eval "${shellInstructions[$index]}";
 		returnShell=$?;
-		eval "${shellInstructions[$index]}" &> temp;
+		eval "${shellInstructionsRedirections[$index]}";
+		cat temp1 temp2 > temp;
 		cat temp | awk -F ":" '{print $(NF-1), $NF}' > shell_output;
 		rm temp;
 		if [ -f "outfile" ]; then

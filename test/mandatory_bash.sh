@@ -96,12 +96,18 @@ if [ $? -ne 0 ]; then
 	echo -e "${red}Error executing the rule make fclean${nocolor}";
 	exit 1;
 fi
+ls "pipex" &> /dev/null
+if [ $? -eq 0 ]; then
+	echo -e "${red}pipex executable found after using make fclean.${nocolor}"
+	exit 1;
+fi
 make > /dev/null
 if [ $? -ne 0 ]; then
 	echo -e "${red}Error compiling the Makefile with the rule make all${nocolor}";
 	exit 1;
 fi
-if [ ! -f "pipex" ]; then
+ls "pipex" &> /dev/null
+if [ $? -ne 0 ]; then
 	echo -e "${red}pipex executable not found.${nocolor}"
 	exit 1;
 fi
@@ -110,7 +116,8 @@ if [ $? -ne 0 ]; then
 	echo -e "${red}Error executing the rule make clean${nocolor}";
 	exit 1;
 fi
-if [ ! -f "pipex" ]; then
+ls "pipex" &> /dev/null
+if [ $? -ne 0 ]; then
 	echo -e "${red}pipex executable not found after using make clean.${nocolor}"
 	exit 1;
 fi
@@ -119,7 +126,8 @@ if [ $? -ne 0 ]; then
 	echo -e "${red}Error executing the rule make fclean${nocolor}";
 	exit 1;
 fi
-if [ -f "pipex" ]; then
+ls "pipex" &> /dev/null
+if [ $? -eq 0 ]; then
 	echo -e "${red}pipex executable found after using make fclean.${nocolor}"
 	exit 1;
 fi
@@ -128,7 +136,8 @@ if [ $? -ne 0 ]; then
 	echo -e "${red}Error executing the rule make re${nocolor}";
 	exit 1;
 fi
-if [ ! -f "pipex" ]; then
+ls "pipex" &> /dev/null
+if [ $? -ne 0 ]; then
 	echo -e "${red}pipex executable not found.${nocolor}"
 	exit 1;
 fi
