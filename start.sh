@@ -58,13 +58,11 @@ docker-compose up -d;
 if [ $? -ne 0 ]; then
 	echo -e "${red}The execution of docker-compose failed. Make sure that you have a valid installation of docker in your machine${nocolor}";
 	rm -rf temp_files/;
-	rm -rf Dockerfile;
 	exit 1;
 fi
 docker-compose exec pipex bash /pipex/interface.sh;
 docker-compose down;
 rm -rf temp_files/;
-rm -rf Dockerfile;
 echo "";
 echo -e "${brightgreen}All tests done. Hope to see you again!!${nocolor}";
 exit 0;
